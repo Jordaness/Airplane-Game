@@ -5,15 +5,140 @@
 </head>
 <body>
 	<style type="text/css">
-
+			.body{
+				background-color: #000000;
+			}
+			#ocean{
+				background-image: url("ocean.jpg");
+				width: 900px;
+				height: 700px;
+				}
+			.player{
+				position: absolute;
+				background-image: url("player.png");
+				width: 70px;
+				height: 75px;
+			}
+			.enemy{
+				position: absolute;
+				background-image: url("enemy.png");
+				width: 70px;
+				height: 75px;
+			}
+			.missle{
+				position: absolute;
+				background-color: orange;
+				width: 2px;
+				height: 10px;
+			}
 	</style>
-
-
-
-
+<!-- HTML BODY -->
+	<div id="ocean">
+		<div id="players"></div>
+		<div id="enemies"></div>
+		<div id="missles"></div>
+		</div>
+	</div>
 
 	<script type="text/javascript">
-	
+	var player = {
+			left: 450,
+			top: 620
+	}
+	var enemies = [
+		{left: 350, top: 200},
+		{left: 450, top: 250},
+		{left: 250, top: 250},
+		{left: 550, top: 200}
+	]
+	var missles = [];
+
+	function drawPlayer(){
+		content = "<div class='player' style='left:" + player.left + "px; top:" + player.top +"px;'></div>";
+
+		document.getElementById("players").innerHTML = content;
+	}
+
+	function drawEnemies(){
+		content = "";
+
+		for(var i = 0; i < enemies.length; i++){
+				content += "<div class='enemy' style='left:" + enemies[i].left + "px; top:" + enemies[i].top +"px;'></div>";
+		}
+
+		document.getElementById("enemies").innerHTML = content;
+	}
+
+//moves the enemies 1 px at a time
+	function moveEnemies(){
+		for(var i = 0; i < enemies.length; i++){
+			enemies[i].top += 2;
+		}
+	}
+
+	function drawMissles(){
+		content = "";
+
+		for(var i = 0; i < missles.length; i++){
+				content += "<div class='missle' style='left:" + missles[i].left + "px; top:" + missles[i].top +"px;'></div>";
+		}
+
+		document.getElementById("missles").innerHTML = content;
+	}
+
+//moves missles 5px at a time
+	function moveMissles(){
+		for(var i = 0; i < missles.length; i++){
+			missles[i].top -= 8;
+		}
+	}
+
+	//keystroke movement
+	document.onkeydown = function(e){
+		if(e.keyCode == 37){ //left
+			if(player.left-10 >= 0)
+			{
+				player.left -= 10;
+			}
+		}
+		if(e.keyCode == 39){ //right
+			if(player.left+10 <= 845)
+			{
+				player.left += 10;
+			}
+		}
+		if(e.keyCode == 38){ //up
+			if(player.top-10 >= 400)
+			{
+				player.top -= 10;
+			}
+		}
+		if(e.keyCode == 40){ //down
+			if(player.top-10 <= 620)
+			{
+				player.top += 10;
+			}
+		}
+		if(e.keyCode == 32){ //spacebar
+			missles.push({left: (player.left+33), top: (player.top-8)})
+			drawMissles();
+		}
+
+		drawPlayer();
+	}
+
+	function gameLoop(){
+		drawPlayer();
+
+		moveEnemies();
+		drawEnemies();
+
+		moveMissles();
+		drawMissles();
+		setTimeout(gameLoop, 100);
+	}
+
+	gameLoop();
 
 	</script>
 </body>
